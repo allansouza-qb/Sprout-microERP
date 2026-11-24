@@ -9,4 +9,31 @@ defmodule SproutErpWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
+
+  ## JSON API
+
+  scope "/api", SproutErpWeb.API do
+    pipe_through :api
+
+    get "/dashboard", DashboardController, :show
+
+    get "/lots", LotController, :index
+    get "/lots/options", LotController, :options
+    post "/lots", LotController, :create
+    get "/lots/:id", LotController, :show
+
+    get "/workshop", WorkshopController, :index
+
+    get "/units", UnitController, :index
+    get "/units/:id", UnitController, :show
+    post "/units/:id/actions/:action", UnitController, :transition
+    post "/units/:unit_id/work_items", WorkItemController, :create
+    patch "/work_items/:id/toggle", WorkItemController, :toggle
+    delete "/work_items/:id", WorkItemController, :delete
+
+    get "/listings", ListingController, :index
+    get "/sales", SaleController, :index
+
+    match :*, "/*path", NotFoundController, :show
+  end
 end
