@@ -45,6 +45,15 @@ defmodule SproutErpWeb.Router do
     match :*, "/*path", NotFoundController, :show
   end
 
+  ## Downloads (plain browser requests, same filters as the screens)
+
+  scope "/", SproutErpWeb do
+    pipe_through :browser
+
+    get "/export/inventory.csv", ExportController, :inventory
+    get "/export/sales.csv", ExportController, :sales
+  end
+
   ## Single-page app: every other path renders the Vue shell
 
   scope "/", SproutErpWeb do
