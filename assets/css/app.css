@@ -1,0 +1,224 @@
+/* See the Tailwind configuration guide for advanced usage
+   https://tailwindcss.com/docs/configuration */
+
+@import "tailwindcss" source(none);
+/* Class names come from the Vue app and, for category icons, from the backend. */
+@source "../src";
+@source "../../lib/sprout_erp";
+
+/* A Tailwind plugin that makes "hero-#{ICON}" classes available.
+   The icons themselves are the heroicons dependency in mix.exs (deps/heroicons). */
+@plugin "../vendor/heroicons.cjs";
+
+/* daisyUI (form controls only), also a mix dependency. */
+@plugin "../../deps/daisyui/packages/bundle/daisyui.mjs" {
+  themes: false;
+}
+
+/* Sprout theme — a single light theme in the brand colours. */
+@plugin "../../deps/daisyui/packages/bundle/daisyui-theme.mjs" {
+  name: "light";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: #ffffff;
+  --color-base-200: #f1f1f8;
+  --color-base-300: #dcdaec;
+  --color-base-content: #10001f;
+  --color-primary: #342775;
+  --color-primary-content: #ffffff;
+  --color-secondary: #4b48b7;
+  --color-secondary-content: #ffffff;
+  --color-accent: #ffb600;
+  --color-accent-content: #10001f;
+  --color-neutral: #10001f;
+  --color-neutral-content: #ffffff;
+  --color-info: #4b48b7;
+  --color-info-content: #ffffff;
+  --color-success: #2a6a4f;
+  --color-success-content: #ffffff;
+  --color-warning: #a16207;
+  --color-warning-content: #ffffff;
+  --color-error: #b42318;
+  --color-error-content: #ffffff;
+  --radius-selector: 0.625rem;
+  --radius-field: 0.625rem;
+  --radius-box: 0.625rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+/* ───────────── Sprout design tokens ───────────── */
+@theme {
+  --font-sans: "DM Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-canvas: #f1f1f8;       /* page background (mist) */
+  --color-surface: #ffffff;      /* cards */
+  --color-muted: #e9e8f4;        /* neutral surfaces + hover */
+  --color-line: #dcdaec;         /* borders */
+  --color-line-soft: #e8e7f3;    /* row dividers */
+  --color-ink: #10001f;          /* text */
+  --color-ink-2: #524c6b;        /* secondary text */
+  --color-ink-3: #736e8c;        /* tertiary / hints */
+
+  /* Brand purple (white text on it), its shades and tints */
+  --color-brand-950: #10001f;
+  --color-brand-900: #18003a;
+  --color-brand-800: #271c5e;
+  --color-brand-700: #342775;   /* primary */
+  --color-brand-600: #342775;
+  --color-brand-500: #4b48b7;   /* accent: focus, progress, links on hover */
+  --color-brand-300: #a69eef;   /* lavender */
+  --color-brand-200: #cfcbf6;
+  --color-brand-100: #e6e4fa;
+  --color-brand-50: #f3f2fd;
+
+  --color-amber: #ffb600;        /* brand highlight, used sparingly */
+
+  --color-sand-500: oklch(0.68 0.09 75);
+  --color-sand-100: oklch(0.96 0.03 85);
+
+  --radius-ui: 1.25rem;
+  --radius-md: 0.7rem;
+  --radius-lg: 0.9rem;
+  --radius-xl: 1.1rem;
+}
+
+:root {
+  /* Light → dark steps of the brand purple, for the pipeline bar */
+  --ramp-1: #dedbf9;
+  --ramp-2: #c1bbf4;
+  --ramp-3: #a69eef;
+  --ramp-4: #6c66cf;
+  --ramp-5: #342775;
+}
+
+html { background: var(--color-canvas); color: var(--color-ink); }
+body {
+  color: var(--color-ink);
+  background:
+    radial-gradient(900px 520px at 6% -10%, rgb(166 158 239 / 0.42), transparent 62%),
+    radial-gradient(820px 520px at 98% 0%, rgb(188 214 241 / 0.5), transparent 60%),
+    var(--color-canvas);
+  background-attachment: fixed;
+  font-family: var(--font-sans); font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased;
+}
+
+/* DM Sans has no tabular figures, so numbers that must line up in columns use
+   Inter; large standalone numbers stay in the brand font. */
+.num { font-family: "Inter", ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+.font-display { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.02em; }
+.kpi-value { font-family: var(--font-sans); }
+
+.card-surface {
+  background: oklch(1 0 0 / 0.8);
+  border: 1px solid oklch(1 0 0 / 0.9);
+  border-radius: var(--radius-ui);
+  box-shadow: 0 1px 2px rgb(16 0 31 / 0.04), 0 14px 34px -18px rgb(52 39 117 / 0.24);
+}
+/* Dialogs sit on top of the page, so they are solid instead of glass */
+.card-surface[role="dialog"] { background: var(--color-surface); box-shadow: 0 30px 70px -24px rgb(16 0 31 / 0.45); }
+
+/* Buttons */
+.btn-sprout {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  height: 2.25rem; padding: 0 1.1rem; border-radius: 999px;
+  font-size: 0.8125rem; font-weight: 500; white-space: nowrap;
+  transition: background-color .15s, border-color .15s, color .15s, box-shadow .15s;
+  cursor: pointer;
+}
+.btn-sprout:disabled { opacity: .45; cursor: not-allowed; }
+.btn-sprout-primary { background: var(--color-brand-700); color: oklch(1 0 0); box-shadow: 0 8px 18px -10px rgb(52 39 117 / 0.75); }
+.btn-sprout-primary:hover:not(:disabled) { background: var(--color-brand-800); }
+.btn-sprout-ghost { background: transparent; color: var(--color-ink); border: 1px solid var(--color-line); }
+.btn-sprout-ghost:hover:not(:disabled) { background: var(--color-muted); }
+.btn-sprout-text { background: transparent; color: var(--color-brand-700); border: 0; }
+.btn-sprout-text:hover:not(:disabled) { background: var(--color-muted); }
+.btn-sprout-sm { height: 1.875rem; font-size: 0.75rem; }
+.btn-sprout-primary:focus-visible, .btn-sprout-ghost:focus-visible, .btn-sprout-text:focus-visible {
+  outline: none; box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-brand-500) 25%, transparent);
+}
+
+/* Tables */
+.table-sprout { width: 100%; font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
+.table-sprout thead th {
+  text-align: left; font-weight: 500; font-size: 0.6875rem; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--color-ink-2); padding: 0.7rem 1rem; border-bottom: 1px solid var(--color-line); background: var(--color-surface);
+  white-space: nowrap;
+}
+.table-sprout tbody td { padding: 0.95rem 1rem; border-bottom: 1px solid var(--color-line-soft); vertical-align: middle; }
+.table-sprout tbody tr:last-child td { border-bottom: 0; }
+.table-sprout tbody tr { transition: background-color .12s; }
+.table-sprout tbody tr:hover { background: var(--color-muted); }
+.table-sprout tbody tr.clickable { cursor: pointer; }
+/* Row actions show on hover (and keyboard focus) only */
+.table-sprout .row-action { opacity: 0; transition: opacity .12s; }
+.table-sprout tbody tr:hover .row-action, .table-sprout .row-action:focus-visible { opacity: 1; }
+.table-sprout .r { text-align: right; }
+/* Wide tables: tighter horizontal padding so every column fits at laptop width */
+.table-sprout.table-compact thead th, .table-sprout.table-compact tbody td { padding-left: 0.6rem; padding-right: 0.6rem; }
+.table-sprout.table-compact thead th:first-child, .table-sprout.table-compact tbody td:first-child { padding-left: 1rem; }
+.table-sprout.table-compact thead th:last-child, .table-sprout.table-compact tbody td:last-child { padding-right: 1rem; }
+
+/* Form controls in Sprout style */
+.input, .select, .textarea { border-color: var(--color-line); background: #fff; font-size: 0.8125rem; }
+.input:focus, .input:focus-within, .select:focus, .textarea:focus {
+  outline: none; border-color: var(--color-brand-500);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-brand-500) 18%, transparent);
+}
+.input, .select { min-height: 2.5rem; }
+.form-section-title {
+  font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--color-ink-2); margin-bottom: 0.6rem;
+}
+
+/* Chart tooltip */
+.bar-col .tip { opacity: 0; transform: translate(-50%, 4px); pointer-events: none; transition: opacity .12s, transform .12s; }
+.bar-col:hover .tip { opacity: 1; transform: translate(-50%, 0); }
+.bar-col:hover .bar { background: var(--color-brand-800); }
+
+@keyframes fade-up { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.fade-up { animation: fade-up .35s ease-out both; }
+
+@keyframes fade-up { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.fade-up { animation: fade-up .35s ease-out both; }
+
+/* Logo mark */
+.logo-bg { fill: var(--color-brand-700); }
+.logo-stem { stroke: #ffffff; }
+.logo-leaf-a { fill: var(--color-brand-300); }
+.logo-leaf-b { fill: #ffffff; }
+
+/* ───────────── Dock: the menu is a floating bar at the bottom; icons grow under the pointer ───────────── */
+.app-main { padding-bottom: 150px; }
+.app-dock {
+  display: flex; align-items: flex-end; gap: 10px; position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 60;
+  padding: 10px 14px; border-radius: 26px; background: oklch(1 0 0 / 0.62); backdrop-filter: blur(20px) saturate(1.5);
+  border: 1px solid oklch(1 0 0 / 0.85); box-shadow: 0 22px 50px -18px rgb(52 39 117 / 0.5), 0 0 0 1px rgb(16 0 31 / 0.05);
+}
+.dock-logo { align-self: center; display: block; }
+.dock-sep { align-self: center; width: 1px; height: 34px; background: rgb(16 0 31 / 0.14); }
+.dock-item { --s: 1; position: relative; flex: none; display: grid; place-items: center;
+  width: calc(var(--dock-size, 48px) * var(--s)); height: calc(var(--dock-size, 48px) * var(--s)); border-radius: calc(15px * var(--s));
+  background: var(--color-surface); color: var(--color-ink-2); box-shadow: 0 4px 12px -6px rgb(52 39 117 / 0.35);
+  transition: width .1s linear, height .1s linear, border-radius .1s linear, background-color .15s, color .15s; }
+.dock-icon { width: calc(22px * var(--s)); height: calc(22px * var(--s)); transition: width .1s linear, height .1s linear; }
+.dock-item:hover { color: var(--color-brand-700); }
+.dock-item.active { background: var(--color-brand-700); color: oklch(1 0 0); }
+.dock-item.active::after { content: ""; position: absolute; bottom: -7px; left: 50%; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: var(--color-amber); }
+.dock-tip { position: absolute; left: 50%; bottom: calc(100% + 12px); transform: translate(-50%, 6px); opacity: 0; pointer-events: none; white-space: nowrap;
+  padding: 6px 10px; border-radius: 9px; background: var(--color-ink); color: oklch(1 0 0); font-size: 12px; font-weight: 600;
+  transition: opacity .15s, transform .15s; }
+.dock-item:hover .dock-tip { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 1023px) {
+  .app-dock { gap: 6px; padding: 8px 10px; max-width: calc(100vw - 16px); }
+  .dock-logo, .dock-sep { display: none; }
+}
+@media (max-width: 480px) {
+  .app-dock { --dock-size: 44px; gap: 6px; padding: 7px 8px; bottom: 12px; }
+}

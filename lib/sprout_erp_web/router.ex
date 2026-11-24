@@ -1,6 +1,14 @@
 defmodule SproutErpWeb.Router do
   use SproutErpWeb, :router
 
+  pipeline :browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :put_root_layout, html: {SproutErpWeb.Layouts, :root}
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+  end
+
   # There is no login. The session cookie only carries the CSRF token, which
   # the SPA sends on every write (x-csrf-token header).
   pipeline :api do
@@ -35,5 +43,13 @@ defmodule SproutErpWeb.Router do
     get "/sales", SaleController, :index
 
     match :*, "/*path", NotFoundController, :show
+  end
+
+  ## Single-page app: every other path renders the Vue shell
+
+  scope "/", SproutErpWeb do
+    pipe_through :browser
+
+    get "/*path", PageController, :index
   end
 end
