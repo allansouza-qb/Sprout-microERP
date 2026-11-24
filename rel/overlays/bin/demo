@@ -1,0 +1,8 @@
+#!/bin/sh
+# Starts a demo deployment: migrations, demo data on an empty database, then
+# the web server. Used where there is no separate release step (Render free plan).
+set -eu
+
+cd -P -- "$(dirname -- "$0")"
+./sprout_erp eval "SproutErp.Release.setup_demo()"
+PHX_SERVER=true exec ./sprout_erp start

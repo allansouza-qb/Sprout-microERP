@@ -10,7 +10,7 @@ and resells them on **Amazon Renewed**.
 | Front end | Single-page app in **Vue 3** (Vue Router, Pinia), built by Vite, styled with Tailwind |
 | Back end | **Elixir / Phoenix 1.8** JSON API under `/api`, plus a Phoenix Channel for live updates |
 | Database | **PostgreSQL** through Ecto |
-| Hosting | **Heroku** (Procfile and buildpack config included; see [Deploy](#deploy-to-heroku)) |
+| Hosting | **Heroku** (Procfile and buildpack config; see [Deploy to Heroku](#deploy-to-heroku)) or any Docker host, such as **Render** ([Deploy to Render](#deploy-to-render)) |
 
 Business rules (cost allocation, grading and pricing, estimated fees, margins) live
 in the Elixir contexts. The API returns the computed numbers; the Vue app only
@@ -132,6 +132,25 @@ data; run the seeds again to restore it.
 `DATABASE_URL` comes from the Postgres add-on. This configuration was exercised
 locally in production mode (`MIX_ENV=prod`, same commands the buildpacks run); it has
 not been deployed to a Heroku app yet.
+
+## Deploy to Render
+
+`render.yaml` describes a free web service, built from the `Dockerfile` as an Elixir
+release, and a free PostgreSQL database.
+
+1. On [render.com](https://render.com), choose **New → Blueprint** and connect this
+   repository.
+2. Apply the blueprint. Render builds the image, creates the database and fills in
+   `DATABASE_URL` and `SECRET_KEY_BASE`.
+
+The service starts with `bin/demo`: it runs the migrations, loads the demo data when
+the database is empty and then starts the server, so there is no manual step. The
+public host name comes from `RENDER_EXTERNAL_HOSTNAME`.
+
+On the free plan the service sleeps when idle (the first request takes a while) and
+the free database expires 30 days after it is created. The release and its start
+script were exercised locally against PostgreSQL; the Docker build itself runs on
+Render.
 
 ## Known limitations
 
