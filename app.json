@@ -1,0 +1,29 @@
+{
+  "name": "Sprout ERP PoC",
+  "description": "Micro-ERP for refurbished electronics: Vue SPA, Phoenix JSON API, PostgreSQL.",
+  "stack": "heroku-24",
+  "buildpacks": [
+    {
+      "url": "https://github.com/HashNuke/heroku-buildpack-elixir"
+    },
+    {
+      "url": "https://github.com/gjaldon/heroku-buildpack-phoenix-static"
+    }
+  ],
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "env": {
+    "SECRET_KEY_BASE": {
+      "description": "Signs the session cookie.",
+      "generator": "secret"
+    },
+    "PHX_HOST": {
+      "description": "Public host name, e.g. my-app.herokuapp.com (used for URLs and the WebSocket origin check)."
+    },
+    "POOL_SIZE": {
+      "description": "Database connections per dyno.",
+      "value": "10"
+    }
+  }
+}

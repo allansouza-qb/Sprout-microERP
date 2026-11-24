@@ -1,0 +1,4 @@
+# Run by the Phoenix static buildpack on Heroku, after `npm install` in assets/.
+# Builds the Vue app with Vite into priv/static/assets and fingerprints the files.
+cd $phoenix_dir
+mix assets.deploy
